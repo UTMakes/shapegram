@@ -258,6 +258,9 @@
             font-size: 14px; 
             color: var(--text);
         }
+        .bio a:hover {
+            text-decoration: underline;
+        }
         .tag { 
             display: inline-block; 
             background: var(--gradient); 
@@ -671,7 +674,7 @@
 
                         <div class="bio">
                             <strong id="displayName">Parallelogram</strong><br>
-                            <span id="bioText">✨ Shape creator | 🌍 Geometric enthusiast</span><br>
+                            <span id="bioText">✨ Shape creator<br>🌍 Best geometric shape(they all stem from me)<br>📩 Collabs: <a href="https://www.youtube.com/@FelixYe-w2h" target="_blank" style="color: var(--primary); text-decoration: none;">https://www.youtube.com/@FelixYe-w2h</a>, Gabriel, Kevin</span><br>
                             <span class="tag">Creator</span>
                             <span class="tag">Math</span>
                         </div>
@@ -766,7 +769,7 @@
                     cover: null,
                     displayName: 'Parallelogram',
                     username: 'Parallelogram_Best_Shape',
-                    bio: '✨ Shape creator | 🌍 Geometric enthusiast',
+                    bio: '✨ Shape creator\n🌍 Best geometric shape(they all stem from me)\n📩 Collabs: https://www.youtube.com/@FelixYe-w2h, Gabriel, Kevin',
                     friends: [],
                     extra: null,
                     posts: [],
@@ -844,7 +847,11 @@
                 const { displayName, username, bio } = this.state.data;
                 document.getElementById('displayName').textContent = displayName;
                 document.getElementById('username').textContent = username;
-                document.getElementById('bioText').textContent = bio;
+                
+                // Convert newlines to <br> and URLs to links
+                let formattedBio = bio.replace(/\n/g, '<br>');
+                formattedBio = formattedBio.replace(/(https?:\/\/[^\s,]+)/g, '<a href="$1" target="_blank" style="color: var(--primary); text-decoration: none;">$1</a>');
+                document.getElementById('bioText').innerHTML = formattedBio;
             },
 
             // Render gallery
