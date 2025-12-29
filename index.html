@@ -1,1 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Shapegram</title>
+    <style>
+        :root {
+            /* 🎨 Theme Variables */
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --bg-color: #fafafa;
+            --card-bg: #ffffff;
+            --text-main: #262626;
+            --text-secondary: #8e8e8e;
+            --border-color: #dbdbdb;
+            --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --anim-speed: 0.3s;
+            --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Layout & Containers */
+        .page-wrapper {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Semantic Sidebar */
+        .sidebar {
+            width: 80px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+            height: fit-content;
+            position: sticky;
+            top: 40px;
+            z-index: 100;
+        }
+
+        .sidebar-logo { font-size: 32px; margin-bottom: 20px; }
+        .sidebar-logo img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+
+        .sidebar-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 32px;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            transition: all var(--anim-speed) var(--ease-bounce);
+        }
+
+        .sidebar-link:hover {
+            color: #667eea;
+            background: #f0f0f0;
+            transform: scale(1.1);
+        }
+
+        .sidebar-link.active {
+            color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        /* Main Feed Area */
+        .main-content {
+            max-width: 935px;
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .navbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 600;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Stories */
+        .stories-section {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .stories-section::-webkit-scrollbar { height: 6px; }
+        .stories-section::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+        .story {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .story:hover { transform: translateY(-2px); }
+
+        .story-avatar-ring {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            padding: 2px;
+            margin-bottom: 5px;
+        }
+
+        .story-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid white;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            overflow: hidden;
+        }
+
+        .story-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .story-username { font-size: 12px; color: var(--text-main); }
+
+        /* Feed */
+        .feed-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 20px 0;
+            scroll-behavior: smooth;
+        }
+
+        .post-card {
+            background: var(--card-bg);
+            margin: 0 auto 30px;
+            max-width: 614px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .post-header { display: flex; align-items: center; padding: 14px 16px; gap: 12px; }
+        .post-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; background: #eee; }
+        .post-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .post-username { font-weight: 600; font-size: 14px; flex: 1; }
+
+        .post-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            overflow: hidden;
+        }
+        .post-image img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Interactive Elements */
+        .post-actions { padding: 12px 16px; display: flex; gap: 16px; font-size: 24px; }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            transition: transform 0.2s var(--ease-bounce);
+            padding: 0;
+        }
+
+        .action-btn:hover { transform: scale(1.2); }
+        
+        @keyframes like-burst {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .action-btn.liked {
+            color: #ed4956;
+            animation: like-burst 0.3s var(--ease-bounce);
+        }
+
+        .post-info { padding: 0 16px 16px; }
+        .likes-count { font-weight: 600; margin-bottom: 8px; display: block; }
+        .caption { line-height: 1.4; margin-bottom: 8px; }
+        .timestamp { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; }
+
+        /* Customizer Panel */
+        .toggle-panel-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow-hover);
+            z-index: 1001;
+            transition: transform 0.3s;
+        }
+        .toggle-panel-btn:hover { transform: rotate(90deg); }
+
+        .customize-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 320px;
+            background: white;
+            padding: 80px 20px 20px;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .customize-panel.active { transform: translateX(0); }
+
+        /* Utilities */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none !important; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .page-wrapper { flex-direction: column; padding-bottom: 60px; }
+            .sidebar {
+                position: fixed;
+                bottom: 0;
+                top: auto;
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 10px;
+                border-radius: 0;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            }
+            .sidebar-logo { display: none; }
+            .customize-panel { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="toggle-panel-btn" onclick="togglePanel()" aria-label="Toggle Customizer">🎨</button>
+
+    <aside class="customize-panel" id="customizePanel">
+        <h3>📷 Customize Experience</h3>
+        <p style="font-size: 0.8rem; color: #666; margin-bottom: 20px;">Changes auto-save to your browser!</p>
+        
+        <div id="uploadControls">
+            </div>
+
+        <div style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 8px; font-size: 11px;">
+            <button onclick="exportConfig()" style="width:100%; padding:8px; border:none; background:#333; color:white; border-radius:4px; cursor:pointer;">📋 Export Config for GitHub</button>
+            <div id="configOutput" style="display:none; margin-top:10px; word-break:break-all; user-select:all;"></div>
+        </div>
+    </aside>
+
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-logo" id="sidebarLogo">📷</div>
+            <a href="index.html" class="sidebar-link active" aria-label="Home">🏠</a>
+            <a href="messages.html" class="sidebar-link" aria-label="Messages">💬</a>
+            <a href="profile.html" class="sidebar-link" aria-label="Profile">👤</a>
+        </nav>
+
+        <main class="main-content">
+            <header class="navbar">
+                <div class="logo">Shapegram</div>
+            </header>
+
+            <section class="stories-section" id="stories" aria-label="Stories"></section>
+            <section class="feed-container" id="feed" aria-label="News Feed"></section>
+        </main>
+    </div>
+
+    <script>
+        // 🚀 State Management with LocalStorage
+        const State = {
+            data: {
+                logo: null,
+                stories: [null, null, null, null, null],
+                users: [null, null, null, null],
+                posts: [null, null, null, null]
+            },
+            
+            init() {
+                // Try load from local storage first
+                const saved = localStorage.getItem('shapegram_home_config');
+                if (saved) {
+                    try {
+                        this.data = { ...this.data, ...JSON.parse(saved) };
+                    } catch(e) { console.error("Save file corrupted"); }
+                }
+                
+                // Also check for legacy injected config
+                if (typeof IMAGES_CONFIG !== 'undefined') {
+                    this.data = { ...this.data, ...IMAGES_CONFIG };
+                }
+
+                this.renderAll();
+                this.setupCustomizer();
+            },
+
+            save() {
+                try {
+                    localStorage.setItem('shapegram_home_config', JSON.stringify(this.data));
+                } catch (e) {
+                    alert("Image too large to save to browser storage. Use Export Config.");
+                }
+            },
+
+            updateImage(category, index, dataUrl) {
+                if (index === null) this.data[category] = dataUrl;
+                else this.data[category][index] = dataUrl;
+                this.save();
+                this.renderAll();
+            },
+
+            renderAll() {
+                App.renderLogo();
+                App.renderStories();
+                App.renderFeed();
+            },
+
+            setupCustomizer() {
+                const container = document.getElementById('uploadControls');
+                const createUpload = (label, cat, idx) => {
+                    const div = document.createElement('div');
+                    div.style.marginBottom = '15px';
+                    div.innerHTML = `
+                        <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:5px;">${label}</label>
+                        <input type="file" accept="image/*" style="font-size:11px">
+                    `;
+                    div.querySelector('input').addEventListener('change', (e) => {
+                        const file = e.target.files[0];
+                        if(!file) return;
+                        const reader = new FileReader();
+                        reader.onload = (ev) => this.updateImage(cat, idx, ev.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                    container.appendChild(div);
+                };
+
+                createUpload('Site Logo', 'logo', null);
+                ['Parallelogram', 'Square', 'Rectangle', 'Rhombus', 'Trapezoid'].forEach((name, i) => createUpload(`${name} Story`, 'stories', i));
+                ['Square', 'Rectangle', 'Rhombus', 'Trapezoid'].forEach((name, i) => {
+                    createUpload(`${name} Avatar`, 'users', i);
+                    createUpload(`${name} Post`, 'posts', i);
+                });
+            }
+        };
+
+        // 🎨 UI Logic
+        const App = {
+            renderLogo() {
+                const el = document.getElementById('sidebarLogo');
+                if (State.data.logo) el.innerHTML = `<img src="${State.data.logo}" alt="Logo">`;
+            },
+
+            renderStories() {
+                const container = document.getElementById('stories');
+                const fragment = document.createDocumentFragment(); // Performance: Batch DOM updates
+                const names = ['parallelogram', 'square', 'rectangle', 'rhombus', 'trapezoid'];
+                const emojis = ['▱', '🟦', '🟪', '🔷', '🔶'];
+
+                names.forEach((name, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'story';
+                    div.innerHTML = `
+                        <div class="story-avatar-ring">
+                            <div class="story-avatar">
+                                ${State.data.stories[i] ? `<img src="${State.data.stories[i]}">` : emojis[i]}
+                            </div>
+                        </div>
+                        <span class="story-username">${name}</span>
+                    `;
+                    fragment.appendChild(div);
+                });
+                
+                container.innerHTML = '';
+                container.appendChild(fragment);
+            },
+
+            renderFeed() {
+                const container = document.getElementById('feed');
+                const fragment = document.createDocumentFragment();
+                const users = ['square', 'rectangle', 'rhombus', 'trapezoid'];
+                const captions = [
+                    'All sides equal, all angles perfect! ✨',
+                    'Living that rectangular life 🌅',
+                    'Diagonal measurements on point 🚀',
+                    'Two parallel sides gang 😎'
+                ];
+                const gradients = [
+                    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+                ];
+
+                users.forEach((user, i) => {
+                    const article = document.createElement('article');
+                    article.className = 'post-card';
+                    const avatar = State.data.users[i] ? `<img src="${State.data.users[i]}">` : '👤';
+                    const postImg = State.data.posts[i] ? `<img src="${State.data.posts[i]}">` : '';
+                    
+                    article.innerHTML = `
+                        <div class="post-header">
+                            <div class="post-avatar">${avatar}</div>
+                            <span class="post-username">${user}</span>
+                            <span style="cursor:pointer">⋯</span>
+                        </div>
+                        <div class="post-image" style="${!postImg ? `background:${gradients[i]}` : ''}">
+                            ${postImg}
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-btn" onclick="this.classList.toggle('liked')" aria-label="Like">❤️</button>
+                            <button class="action-btn" aria-label="Comment">💬</button>
+                            <button class="action-btn" aria-label="Share">📤</button>
+                        </div>
+                        <div class="post-info">
+                            <span class="likes-count">${Math.floor(Math.random() * 900) + 100} likes</span>
+                            <div class="caption"><strong>${user}</strong> ${captions[i]}</div>
+                            <div class="timestamp">${Math.floor(Math.random() * 12) + 1} HOURS AGO</div>
+                        </div>
+                    `;
+                    fragment.appendChild(article);
+                });
+
+                container.innerHTML = '';
+                container.appendChild(fragment);
+            }
+        };
+
+        // Utility Functions
+        function togglePanel() {
+            document.getElementById('customizePanel').classList.toggle('active');
+        }
+
+        function exportConfig() {
+            const output = document.getElementById('configOutput');
+            const code = `const IMAGES_CONFIG = ${JSON.stringify(State.data, null, 2)};`;
+            output.textContent = code;
+            output.style.display = 'block';
+            navigator.clipboard.writeText(code).then(() => alert("Config copied to clipboard!"));
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => State.init());
+    </script>
+    <script src="images-config.js"></script>
+</body>
+</html>
