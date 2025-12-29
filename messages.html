@@ -23,6 +23,17 @@
             --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        body.dark-mode {
+            --bg: #0f0f0f;
+            --card: #1c1c1c;
+            --text: #ffffff;
+            --text-light: #b0b0b0;
+            --border: #3a3a3a;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0a1f 100%) !important;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -36,6 +47,7 @@
             overflow: hidden;
             color: var(--text);
             -webkit-font-smoothing: antialiased;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .app {
@@ -58,6 +70,7 @@
             align-items: center;
             gap: 20px;
             box-shadow: var(--shadow-lg);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
         .nav-logo {
@@ -71,6 +84,7 @@
             justify-content: center;
             margin-bottom: 10px;
             transition: transform var(--transition);
+            cursor: pointer;
         }
 
         .nav-logo:hover {
@@ -115,6 +129,7 @@
             grid-template-columns: 360px 1fr;
             box-shadow: var(--shadow-lg);
             animation: slideIn 0.4s ease-out;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
         @keyframes slideIn {
@@ -127,6 +142,7 @@
             display: flex;
             flex-direction: column;
             background: var(--card);
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .conversations-header {
@@ -135,11 +151,14 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            transition: border-color 0.3s ease;
         }
 
         .conversations-title {
             font-size: 20px;
             font-weight: 700;
+            color: var(--text);
+            transition: color 0.3s ease;
         }
 
         .new-chat-btn {
@@ -159,11 +178,17 @@
 
         .new-chat-btn:hover {
             transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .new-chat-btn:hover {
+            box-shadow: 0 4px 20px rgba(139, 157, 255, 0.6);
         }
 
         .search-box {
             padding: 12px 20px;
             border-bottom: 1px solid var(--border);
+            transition: border-color 0.3s ease;
         }
 
         .search-input {
@@ -174,6 +199,8 @@
             outline: none;
             font-size: 14px;
             transition: all var(--transition);
+            background: var(--card);
+            color: var(--text);
         }
 
         .search-input:focus {
@@ -267,11 +294,14 @@
         .conversation-name {
             font-weight: 600;
             font-size: 15px;
+            color: var(--text);
+            transition: color 0.3s ease;
         }
 
         .conversation-time {
             font-size: 12px;
             color: var(--text-light);
+            transition: color 0.3s ease;
         }
 
         .conversation-message {
@@ -280,6 +310,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            transition: color 0.3s ease;
         }
 
         .conversation-message.unread {
@@ -317,6 +348,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .chat-avatar {
@@ -331,6 +363,7 @@
             font-size: 24px;
             color: white;
             position: relative;
+            flex-shrink: 0;
         }
 
         .chat-avatar img {
@@ -347,11 +380,14 @@
             font-weight: 600;
             font-size: 16px;
             margin-bottom: 2px;
+            color: var(--text);
+            transition: color 0.3s ease;
         }
 
         .chat-status {
             font-size: 13px;
             color: var(--text-light);
+            transition: color 0.3s ease;
         }
 
         .typing-indicator {
@@ -453,6 +489,7 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .input-btn {
@@ -484,6 +521,8 @@
             font-family: inherit;
             resize: none;
             transition: all var(--transition);
+            background: var(--card);
+            color: var(--text);
         }
 
         .message-input:focus {
@@ -524,11 +563,99 @@
             justify-content: center;
             gap: 16px;
             color: var(--text-light);
+            transition: color 0.3s ease;
         }
 
         .empty-icon {
             font-size: 80px;
             opacity: 0.5;
+        }
+
+        /* Dark Mode Toggle */
+        .dark-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--card);
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dark-toggle:hover {
+            transform: scale(1.1) rotate(20deg);
+        }
+
+        body.dark-mode .dark-toggle {
+            background: #2a2a2a;
+        }
+
+        body.dark-mode .input-btn {
+            background: #2a2a2a;
+            color: var(--text-light);
+        }
+
+        body.dark-mode .input-btn:hover {
+            background: #3a3a3a;
+        }
+
+        body.dark-mode .conversation:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        body.dark-mode .conversation.active {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.15), transparent);
+        }
+
+        body.dark-mode .nav-link:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        body.dark-mode .message.received .message-bubble {
+            background: #2a2a2a;
+            border-color: #3a3a3a;
+        }
+
+        body.dark-mode .conversations-list::-webkit-scrollbar-thumb {
+            background: #3a3a3a;
+        }
+
+        body.dark-mode .messages-area::-webkit-scrollbar-thumb {
+            background: #3a3a3a;
+        }
+
+        body.dark-mode .send-btn:hover:not(:disabled) {
+            box-shadow: 0 4px 20px rgba(139, 157, 255, 0.6);
+        }
+
+        body.dark-mode .typing-dot {
+            background: #8b9dff;
+        }
+
+        body.dark-mode .search-box {
+            border-bottom-color: #3a3a3a;
+        }
+
+        body.dark-mode .online-badge {
+            border-color: #1c1c1c;
+        }
+
+        body.dark-mode .conversation-message.unread {
+            color: #ffffff;
+        }
+
+        body.dark-mode .unread-badge {
+            background: #8b9dff;
+            box-shadow: 0 2px 8px rgba(139, 157, 255, 0.4);
         }
 
         @media (max-width: 768px) {
@@ -560,10 +687,23 @@
                 border-radius: 0;
                 height: calc(100vh - 70px);
             }
+
+            .dark-toggle {
+                top: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+        <span id="darkModeIcon">🌙</span>
+    </button>
+
     <div class="app">
         <nav class="nav">
             <div class="nav-logo" id="logo">📷</div>
@@ -596,6 +736,23 @@
     </div>
 
     <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            document.getElementById('darkModeIcon').textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('shapegram_darkmode', isDark);
+        }
+
+        // Check dark mode preference on load
+        function checkDarkMode() {
+            const isDark = localStorage.getItem('shapegram_darkmode') === 'true';
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeIcon').textContent = '☀️';
+            }
+        }
+
         const app = (() => {
             const KEY = 'shapegram_messages_v2';
             
@@ -622,6 +779,14 @@
                 load();
                 render();
                 document.getElementById('search').addEventListener('input', e => render(e.target.value));
+                
+                // Keyboard shortcut for dark mode (Ctrl/Cmd + D)
+                document.addEventListener('keydown', e => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+                        e.preventDefault();
+                        toggleDarkMode();
+                    }
+                });
             }
 
             function load() {
@@ -797,7 +962,10 @@
             return { init };
         })();
 
-        document.addEventListener('DOMContentLoaded', () => app.init());
+        document.addEventListener('DOMContentLoaded', () => {
+            checkDarkMode();
+            app.init();
+        });
     </script>
     <script src="images-config-messages.js"></script>
 </body>
