@@ -3,153 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shapegram - A social network for geometric shapes">
     <title>Home - Shapegram</title>
     <style>
         :root {
-            /* 🎨 Theme Variables */
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --accent-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --bg-color: #fafafa;
-            --card-bg: #ffffff;
-            --text-main: #262626;
-            --text-secondary: #8e8e8e;
-            --border-color: #dbdbdb;
-            --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --accent: #43e97b;
+            --accent-dark: #38f9d7;
+            --bg: #fafafa;
+            --card: #ffffff;
+            --text: #262626;
+            --text-light: #8e8e8e;
+            --border: #dbdbdb;
+            --like: #ed4956;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+            --radius: 12px;
             --radius-lg: 16px;
-            --radius-md: 12px;
-            --anim-speed: 0.3s;
-            --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             min-height: 100vh;
-            padding: 40px 20px;
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            align-items: flex-start;
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Layout & Containers */
-        .page-wrapper {
-            display: flex;
-            gap: 30px;
+        /* Layout Grid */
+        .app {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 24px;
             max-width: 1200px;
-            width: 100%;
-            justify-content: center;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
         }
 
-        /* Semantic Sidebar */
-        .sidebar {
+        /* Sidebar Navigation */
+        .nav {
             width: 80px;
-            background: var(--card-bg);
+            background: var(--card);
             border-radius: var(--radius-lg);
             padding: 20px;
-            box-shadow: var(--shadow-soft);
+            box-shadow: var(--shadow-lg);
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 24px;
             align-items: center;
             height: fit-content;
             position: sticky;
             top: 40px;
-            z-index: 100;
+            will-change: transform;
         }
 
-        .sidebar-logo { font-size: 32px; margin-bottom: 20px; }
-        .sidebar-logo img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+        .nav-logo {
+            font-size: 36px;
+            margin-bottom: 10px;
+            transition: transform var(--transition-bounce);
+        }
 
-        .sidebar-link {
+        .nav-logo:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .nav-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .nav-link {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
             text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 32px;
-            padding: 12px;
-            border-radius: var(--radius-md);
-            transition: all var(--anim-speed) var(--ease-bounce);
+            color: var(--text-light);
+            transition: all var(--transition);
+            position: relative;
         }
 
-        .sidebar-link:hover {
-            color: #667eea;
-            background: #f0f0f0;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary);
             transform: scale(1.1);
         }
 
-        .sidebar-link.active {
-            color: #667eea;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        .nav-link.active::after {
+            opacity: 1;
         }
 
-        /* Main Feed Area */
-        .main-content {
-            max-width: 935px;
-            flex: 1;
-            background: var(--card-bg);
+        /* Main Container */
+        .main {
+            background: var(--card);
             border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
-            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 80px);
             animation: fadeIn 0.5s ease-out;
         }
 
-        .navbar {
-            background: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 16px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .logo {
+        /* Header */
+        .header {
+            padding: 16px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .brand {
             font-size: 28px;
-            font-weight: 600;
-            background: var(--primary-gradient);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* Stories */
-        .stories-section {
+        .stories {
             padding: 20px 40px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border);
             overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
+            display: flex;
+            gap: 20px;
+            flex-shrink: 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
         }
 
-        .stories-section::-webkit-scrollbar { height: 6px; }
-        .stories-section::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        .stories::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .stories::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
 
         .story {
-            display: inline-flex;
+            display: flex;
             flex-direction: column;
             align-items: center;
-            margin-right: 20px;
+            gap: 6px;
             cursor: pointer;
-            transition: transform 0.2s;
+            flex-shrink: 0;
         }
 
-        .story:hover { transform: translateY(-2px); }
-
-        .story-avatar-ring {
+        .story-ring {
             width: 70px;
             height: 70px;
             border-radius: 50%;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             padding: 2px;
-            margin-bottom: 5px;
+            transition: transform var(--transition);
+        }
+
+        .story:hover .story-ring {
+            transform: scale(1.05);
         }
 
         .story-avatar {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 2px solid white;
-            background: white;
+            background: var(--card);
+            border: 2px solid var(--card);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -157,340 +213,763 @@
             overflow: hidden;
         }
 
-        .story-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .story-username { font-size: 12px; color: var(--text-main); }
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .story-name {
+            font-size: 12px;
+            color: var(--text);
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
         /* Feed */
-        .feed-container {
-            max-height: 600px;
+        .feed {
+            flex: 1;
             overflow-y: auto;
-            padding: 20px 0;
-            scroll-behavior: smooth;
+            padding: 24px 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
         }
 
-        .post-card {
-            background: var(--card-bg);
-            margin: 0 auto 30px;
+        .feed::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .feed::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        /* Post Card */
+        .post {
             max-width: 614px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
+            margin: 0 auto 24px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
+            background: var(--card);
+            transition: all var(--transition);
         }
 
-        .post-header { display: flex; align-items: center; padding: 14px 16px; gap: 12px; }
-        .post-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; background: #eee; }
-        .post-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .post-username { font-weight: 600; font-size: 14px; flex: 1; }
+        .post:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
 
-        .post-image {
-            width: 100%;
-            aspect-ratio: 1;
-            background: #f0f0f0;
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
-            overflow: hidden;
+            color: white;
+            font-size: 16px;
+            flex-shrink: 0;
         }
-        .post-image img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Interactive Elements */
-        .post-actions { padding: 12px 16px; display: flex; gap: 16px; font-size: 24px; }
-        
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-user {
+            font-weight: 600;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .post-menu {
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background var(--transition);
+        }
+
+        .post-menu:hover {
+            background: var(--bg);
+        }
+
+        .post-media {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .post-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 16px;
+            padding: 12px 16px;
+        }
+
         .action-btn {
             background: none;
             border: none;
-            cursor: pointer;
             font-size: 24px;
-            transition: transform 0.2s var(--ease-bounce);
-            padding: 0;
+            cursor: pointer;
+            padding: 4px;
+            transition: transform var(--transition-bounce);
+            color: inherit;
         }
 
-        .action-btn:hover { transform: scale(1.2); }
-        
-        @keyframes like-burst {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
+        .action-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
         }
 
         .action-btn.liked {
-            color: #ed4956;
-            animation: like-burst 0.3s var(--ease-bounce);
+            color: var(--like);
+            animation: likeEffect 0.4s var(--transition-bounce);
         }
 
-        .post-info { padding: 0 16px 16px; }
-        .likes-count { font-weight: 600; margin-bottom: 8px; display: block; }
-        .caption { line-height: 1.4; margin-bottom: 8px; }
-        .timestamp { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; }
+        @keyframes likeEffect {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .post-info {
+            padding: 0 16px 16px;
+        }
+
+        .likes {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .caption {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .caption strong {
+            font-weight: 600;
+            margin-right: 4px;
+        }
+
+        .time {
+            font-size: 10px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         /* Customizer Panel */
-        .toggle-panel-btn {
+        .customizer-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: white;
-            border: none;
-            padding: 12px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            font-size: 24px;
+            background: var(--card);
+            border: none;
+            font-size: 28px;
             cursor: pointer;
-            box-shadow: var(--shadow-hover);
+            box-shadow: var(--shadow-lg);
             z-index: 1001;
-            transition: transform 0.3s;
+            transition: all var(--transition-bounce);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .toggle-panel-btn:hover { transform: rotate(90deg); }
 
-        .customize-panel {
+        .customizer-toggle:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .customizer {
             position: fixed;
             top: 0;
             right: 0;
+            width: 340px;
             height: 100vh;
-            width: 320px;
-            background: white;
-            padding: 80px 20px 20px;
-            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
+            background: var(--card);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.2);
+            padding: 90px 24px 24px;
             overflow-y: auto;
             z-index: 1000;
+            transform: translateX(100%);
+            transition: transform var(--transition);
+            scrollbar-width: thin;
         }
-        .customize-panel.active { transform: translateX(0); }
 
-        /* Utilities */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .hidden { display: none !important; }
+        .customizer.open {
+            transform: translateX(0);
+        }
 
-        /* Mobile */
+        .customizer::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .customizer::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .customizer h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .customizer-subtitle {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 24px;
+        }
+
+        .upload-group {
+            margin-bottom: 20px;
+        }
+
+        .upload-group h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .upload-item {
+            margin-bottom: 12px;
+        }
+
+        .upload-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .upload-input {
+            font-size: 12px;
+            padding: 8px;
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: border-color var(--transition);
+        }
+
+        .upload-input:hover {
+            border-color: var(--primary);
+        }
+
+        .preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-top: 6px;
+            border: 2px solid var(--primary);
+            display: none;
+        }
+
+        .preview.show {
+            display: block;
+        }
+
+        .export-section {
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: var(--radius);
+        }
+
+        .export-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .export-btn:active {
+            transform: translateY(0);
+        }
+
+        .config-output {
+            margin-top: 12px;
+            padding: 12px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            word-break: break-all;
+            display: none;
+            cursor: pointer;
+            user-select: all;
+        }
+
+        .config-output.show {
+            display: block;
+        }
+
+        .config-output:hover {
+            background: var(--bg);
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            font-size: 48px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .page-wrapper { flex-direction: column; padding-bottom: 60px; }
-            .sidebar {
+            .app {
+                grid-template-columns: 1fr;
+                padding: 20px 10px;
+                gap: 0;
+            }
+
+            .nav {
                 position: fixed;
                 bottom: 0;
+                left: 0;
+                right: 0;
                 top: auto;
                 width: 100%;
+                height: 70px;
                 flex-direction: row;
                 justify-content: space-around;
                 padding: 10px;
                 border-radius: 0;
-                box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+                border-top: 1px solid var(--border);
+                z-index: 100;
             }
-            .sidebar-logo { display: none; }
-            .customize-panel { width: 100%; }
+
+            .nav-logo {
+                display: none;
+            }
+
+            .main {
+                max-height: calc(100vh - 90px);
+                margin-bottom: 70px;
+            }
+
+            .header {
+                padding: 12px 20px;
+            }
+
+            .stories {
+                padding: 16px 20px;
+                gap: 16px;
+            }
+
+            .feed {
+                padding: 16px 10px;
+            }
+
+            .customizer {
+                width: 100%;
+            }
+
+            .customizer-toggle {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus States */
+        .nav-link:focus-visible,
+        .action-btn:focus-visible,
+        .upload-input:focus-visible,
+        .export-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
     </style>
 </head>
 <body>
-
-    <button class="toggle-panel-btn" onclick="togglePanel()" aria-label="Toggle Customizer">🎨</button>
-
-    <aside class="customize-panel" id="customizePanel">
-        <h3>📷 Customize Experience</h3>
-        <p style="font-size: 0.8rem; color: #666; margin-bottom: 20px;">Changes auto-save to your browser!</p>
-        
-        <div id="uploadControls">
-            </div>
-
-        <div style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 8px; font-size: 11px;">
-            <button onclick="exportConfig()" style="width:100%; padding:8px; border:none; background:#333; color:white; border-radius:4px; cursor:pointer;">📋 Export Config for GitHub</button>
-            <div id="configOutput" style="display:none; margin-top:10px; word-break:break-all; user-select:all;"></div>
-        </div>
-    </aside>
-
-    <div class="page-wrapper">
-        <nav class="sidebar">
-            <div class="sidebar-logo" id="sidebarLogo">📷</div>
-            <a href="index.html" class="sidebar-link active" aria-label="Home">🏠</a>
-            <a href="messages.html" class="sidebar-link" aria-label="Messages">💬</a>
-            <a href="profile.html" class="sidebar-link" aria-label="Profile">👤</a>
+    <div class="app">
+        <!-- Navigation -->
+        <nav class="nav" role="navigation" aria-label="Main navigation">
+            <div class="nav-logo" id="logo" role="img" aria-label="Shapegram logo">📷</div>
+            <a href="index.html" class="nav-link active" aria-label="Home" aria-current="page">🏠</a>
+            <a href="messages.html" class="nav-link" aria-label="Messages">💬</a>
+            <a href="profile.html" class="nav-link" aria-label="Profile">👤</a>
         </nav>
 
-        <main class="main-content">
-            <header class="navbar">
-                <div class="logo">Shapegram</div>
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <h1 class="brand">Shapegram</h1>
             </header>
 
-            <section class="stories-section" id="stories" aria-label="Stories"></section>
-            <section class="feed-container" id="feed" aria-label="News Feed"></section>
+            <section class="stories" id="stories" aria-label="Stories"></section>
+            
+            <section class="feed" id="feed" aria-label="Feed" role="feed"></section>
         </main>
     </div>
 
+    <!-- Customizer -->
+    <button class="customizer-toggle" onclick="app.toggleCustomizer()" aria-label="Toggle customizer" aria-expanded="false" id="customizerToggle">
+        🎨
+    </button>
+
+    <aside class="customizer" id="customizer" aria-label="Customization panel">
+        <h2>🎨 Customize</h2>
+        <p class="customizer-subtitle">Changes save automatically to your browser</p>
+        
+        <div id="uploadControls"></div>
+
+        <div class="export-section">
+            <button class="export-btn" onclick="app.exportConfig()">
+                📋 Export for GitHub
+            </button>
+            <div class="config-output" id="configOutput"></div>
+        </div>
+    </aside>
+
     <script>
-        // 🚀 State Management with LocalStorage
-        const State = {
-            data: {
-                logo: null,
-                stories: [null, null, null, null, null],
-                users: [null, null, null, null],
-                posts: [null, null, null, null]
-            },
+        // 🚀 Application State & Logic
+        const app = (() => {
+            const STORAGE_KEY = 'shapegram_data_v2';
             
-            init() {
-                // Try load from local storage first
-                const saved = localStorage.getItem('shapegram_home_config');
-                if (saved) {
-                    try {
-                        this.data = { ...this.data, ...JSON.parse(saved) };
-                    } catch(e) { console.error("Save file corrupted"); }
-                }
-                
-                // Also check for legacy injected config
-                if (typeof IMAGES_CONFIG !== 'undefined') {
-                    this.data = { ...this.data, ...IMAGES_CONFIG };
-                }
+            // State
+            const state = {
+                logo: null,
+                stories: Array(5).fill(null),
+                users: Array(4).fill(null),
+                posts: Array(4).fill(null)
+            };
 
-                this.renderAll();
-                this.setupCustomizer();
-            },
+            // Constants
+            const STORY_DATA = {
+                names: ['parallelogram', 'square', 'rectangle', 'rhombus', 'trapezoid'],
+                emojis: ['▱', '🟦', '🟪', '🔷', '🔶']
+            };
 
-            save() {
-                try {
-                    localStorage.setItem('shapegram_home_config', JSON.stringify(this.data));
-                } catch (e) {
-                    alert("Image too large to save to browser storage. Use Export Config.");
-                }
-            },
-
-            updateImage(category, index, dataUrl) {
-                if (index === null) this.data[category] = dataUrl;
-                else this.data[category][index] = dataUrl;
-                this.save();
-                this.renderAll();
-            },
-
-            renderAll() {
-                App.renderLogo();
-                App.renderStories();
-                App.renderFeed();
-            },
-
-            setupCustomizer() {
-                const container = document.getElementById('uploadControls');
-                const createUpload = (label, cat, idx) => {
-                    const div = document.createElement('div');
-                    div.style.marginBottom = '15px';
-                    div.innerHTML = `
-                        <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:5px;">${label}</label>
-                        <input type="file" accept="image/*" style="font-size:11px">
-                    `;
-                    div.querySelector('input').addEventListener('change', (e) => {
-                        const file = e.target.files[0];
-                        if(!file) return;
-                        const reader = new FileReader();
-                        reader.onload = (ev) => this.updateImage(cat, idx, ev.target.result);
-                        reader.readAsDataURL(file);
-                    });
-                    container.appendChild(div);
-                };
-
-                createUpload('Site Logo', 'logo', null);
-                ['Parallelogram', 'Square', 'Rectangle', 'Rhombus', 'Trapezoid'].forEach((name, i) => createUpload(`${name} Story`, 'stories', i));
-                ['Square', 'Rectangle', 'Rhombus', 'Trapezoid'].forEach((name, i) => {
-                    createUpload(`${name} Avatar`, 'users', i);
-                    createUpload(`${name} Post`, 'posts', i);
-                });
-            }
-        };
-
-        // 🎨 UI Logic
-        const App = {
-            renderLogo() {
-                const el = document.getElementById('sidebarLogo');
-                if (State.data.logo) el.innerHTML = `<img src="${State.data.logo}" alt="Logo">`;
-            },
-
-            renderStories() {
-                const container = document.getElementById('stories');
-                const fragment = document.createDocumentFragment(); // Performance: Batch DOM updates
-                const names = ['parallelogram', 'square', 'rectangle', 'rhombus', 'trapezoid'];
-                const emojis = ['▱', '🟦', '🟪', '🔷', '🔶'];
-
-                names.forEach((name, i) => {
-                    const div = document.createElement('div');
-                    div.className = 'story';
-                    div.innerHTML = `
-                        <div class="story-avatar-ring">
-                            <div class="story-avatar">
-                                ${State.data.stories[i] ? `<img src="${State.data.stories[i]}">` : emojis[i]}
-                            </div>
-                        </div>
-                        <span class="story-username">${name}</span>
-                    `;
-                    fragment.appendChild(div);
-                });
-                
-                container.innerHTML = '';
-                container.appendChild(fragment);
-            },
-
-            renderFeed() {
-                const container = document.getElementById('feed');
-                const fragment = document.createDocumentFragment();
-                const users = ['square', 'rectangle', 'rhombus', 'trapezoid'];
-                const captions = [
-                    'All sides equal, all angles perfect! ✨',
+            const POST_DATA = {
+                users: ['square', 'rectangle', 'rhombus', 'trapezoid'],
+                captions: [
+                    'All sides equal, all angles perfect! ✨ (collab with felix)',
                     'Living that rectangular life 🌅',
-                    'Diagonal measurements on point 🚀',
-                    'Two parallel sides gang 😎'
-                ];
-                const gradients = [
+                    'Diagonal measurements on point 🚀 (Collab with Kevin)',
+                    'Two parallel sides gang 😎 (Collab with Gabriel)'
+                ],
+                gradients: [
                     'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
                     'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
                     'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
-                ];
+                ]
+            };
 
-                users.forEach((user, i) => {
-                    const article = document.createElement('article');
-                    article.className = 'post-card';
-                    const avatar = State.data.users[i] ? `<img src="${State.data.users[i]}">` : '👤';
-                    const postImg = State.data.posts[i] ? `<img src="${State.data.posts[i]}">` : '';
-                    
-                    article.innerHTML = `
-                        <div class="post-header">
-                            <div class="post-avatar">${avatar}</div>
-                            <span class="post-username">${user}</span>
-                            <span style="cursor:pointer">⋯</span>
+            // Initialize
+            function init() {
+                loadState();
+                setupCustomizer();
+                render();
+            }
+
+            // State Management
+            function loadState() {
+                try {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved) Object.assign(state, JSON.parse(saved));
+                } catch (e) {
+                    console.warn('Failed to load state:', e);
+                }
+
+                // Fallback to injected config
+                if (typeof IMAGES_CONFIG !== 'undefined') {
+                    Object.assign(state, IMAGES_CONFIG);
+                }
+            }
+
+            function saveState() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                } catch (e) {
+                    console.warn('Failed to save state:', e);
+                    alert('Image too large to save. Use Export Config instead.');
+                }
+            }
+
+            function updateImage(key, index, dataUrl) {
+                if (index === null) {
+                    state[key] = dataUrl;
+                } else {
+                    state[key][index] = dataUrl;
+                }
+                saveState();
+                render();
+            }
+
+            // Rendering
+            function render() {
+                renderLogo();
+                renderStories();
+                renderFeed();
+            }
+
+            function renderLogo() {
+                const el = document.getElementById('logo');
+                if (state.logo) {
+                    el.innerHTML = `<img src="${state.logo}" alt="Custom logo">`;
+                } else {
+                    el.textContent = '📷';
+                }
+            }
+
+            function renderStories() {
+                const container = document.getElementById('stories');
+                const fragment = document.createDocumentFragment();
+
+                STORY_DATA.names.forEach((name, i) => {
+                    const story = document.createElement('div');
+                    story.className = 'story';
+                    story.setAttribute('role', 'button');
+                    story.setAttribute('tabindex', '0');
+                    story.setAttribute('aria-label', `View ${name}'s story`);
+
+                    const avatarContent = state.stories[i]
+                        ? `<img src="${state.stories[i]}" alt="${name}">`
+                        : STORY_DATA.emojis[i];
+
+                    story.innerHTML = `
+                        <div class="story-ring">
+                            <div class="story-avatar">${avatarContent}</div>
                         </div>
-                        <div class="post-image" style="${!postImg ? `background:${gradients[i]}` : ''}">
-                            ${postImg}
-                        </div>
-                        <div class="post-actions">
-                            <button class="action-btn" onclick="this.classList.toggle('liked')" aria-label="Like">❤️</button>
-                            <button class="action-btn" aria-label="Comment">💬</button>
-                            <button class="action-btn" aria-label="Share">📤</button>
-                        </div>
-                        <div class="post-info">
-                            <span class="likes-count">${Math.floor(Math.random() * 900) + 100} likes</span>
-                            <div class="caption"><strong>${user}</strong> ${captions[i]}</div>
-                            <div class="timestamp">${Math.floor(Math.random() * 12) + 1} HOURS AGO</div>
-                        </div>
+                        <span class="story-name">${name}</span>
                     `;
-                    fragment.appendChild(article);
+
+                    fragment.appendChild(story);
                 });
 
                 container.innerHTML = '';
                 container.appendChild(fragment);
             }
-        };
 
-        // Utility Functions
-        function togglePanel() {
-            document.getElementById('customizePanel').classList.toggle('active');
-        }
+            function renderFeed() {
+                const container = document.getElementById('feed');
+                const fragment = document.createDocumentFragment();
 
-        function exportConfig() {
-            const output = document.getElementById('configOutput');
-            const code = `const IMAGES_CONFIG = ${JSON.stringify(State.data, null, 2)};`;
-            output.textContent = code;
-            output.style.display = 'block';
-            navigator.clipboard.writeText(code).then(() => alert("Config copied to clipboard!"));
-        }
+                POST_DATA.users.forEach((user, i) => {
+                    const post = document.createElement('article');
+                    post.className = 'post';
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => State.init());
+                    const avatarContent = state.users[i]
+                        ? `<img src="${state.users[i]}" alt="${user}">`
+                        : '👤';
+
+                    const mediaContent = state.posts[i]
+                        ? `<img src="${state.posts[i]}" alt="Post by ${user}">`
+                        : '';
+
+                    const likes = Math.floor(Math.random() * 900) + 100;
+                    const hours = Math.floor(Math.random() * 12) + 1;
+
+                    post.innerHTML = `
+                        <div class="post-header">
+                            <div class="post-avatar">${avatarContent}</div>
+                            <span class="post-user">${user}</span>
+                            <span class="post-menu" role="button" aria-label="More options">⋯</span>
+                        </div>
+                        <div class="post-media" style="${!state.posts[i] ? `background: ${POST_DATA.gradients[i]}` : ''}">
+                            ${mediaContent}
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-btn" onclick="app.toggleLike(this)" aria-label="Like post">❤️</button>
+                            <button class="action-btn" aria-label="Comment on post">💬</button>
+                            <button class="action-btn" aria-label="Share post">📤</button>
+                        </div>
+                        <div class="post-info">
+                            <span class="likes">${likes.toLocaleString()} likes</span>
+                            <div class="caption"><strong>${user}</strong> ${POST_DATA.captions[i]}</div>
+                            <div class="time">${hours} ${hours === 1 ? 'hour' : 'hours'} ago</div>
+                        </div>
+                    `;
+
+                    fragment.appendChild(post);
+                });
+
+                container.innerHTML = '';
+                container.appendChild(fragment);
+            }
+
+            // Customizer
+            function setupCustomizer() {
+                const container = document.getElementById('uploadControls');
+
+                const createSection = (title, items) => {
+                    const group = document.createElement('div');
+                    group.className = 'upload-group';
+                    group.innerHTML = `<h3>${title}</h3>`;
+
+                    items.forEach(({ label, key, index }) => {
+                        const item = document.createElement('div');
+                        item.className = 'upload-item';
+
+                        const id = `upload-${key}-${index || 0}`;
+                        item.innerHTML = `
+                            <label class="upload-label" for="${id}">${label}</label>
+                            <input type="file" id="${id}" class="upload-input" accept="image/*">
+                            <img class="preview" id="${id}-preview" alt="Preview">
+                        `;
+
+                        const input = item.querySelector('input');
+                        const preview = item.querySelector('.preview');
+
+                        input.addEventListener('change', (e) => {
+                            const file = e.target.files[0];
+                            if (!file || !file.type.startsWith('image/')) return;
+
+                            const reader = new FileReader();
+                            reader.onload = (ev) => {
+                                const dataUrl = ev.target.result;
+                                updateImage(key, index, dataUrl);
+                                preview.src = dataUrl;
+                                preview.classList.add('show');
+                            };
+                            reader.readAsDataURL(file);
+                        });
+
+                        // Show existing preview
+                        const existing = index === null ? state[key] : state[key][index];
+                        if (existing) {
+                            preview.src = existing;
+                            preview.classList.add('show');
+                        }
+
+                        group.appendChild(item);
+                    });
+
+                    container.appendChild(group);
+                };
+
+                // Logo
+                createSection('Logo', [
+                    { label: 'Site Logo', key: 'logo', index: null }
+                ]);
+
+                // Stories
+                createSection('Stories', STORY_DATA.names.map((name, i) => ({
+                    label: `${name.charAt(0).toUpperCase() + name.slice(1)}`,
+                    key: 'stories',
+                    index: i
+                })));
+
+                // Posts
+                createSection('Post Authors & Images', POST_DATA.users.flatMap((user, i) => [
+                    { label: `${user.charAt(0).toUpperCase() + user.slice(1)} Avatar`, key: 'users', index: i },
+                    { label: `${user.charAt(0).toUpperCase() + user.slice(1)} Post`, key: 'posts', index: i }
+                ]));
+            }
+
+            function toggleCustomizer() {
+                const panel = document.getElementById('customizer');
+                const toggle = document.getElementById('customizerToggle');
+                const isOpen = panel.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', isOpen);
+            }
+
+            function exportConfig() {
+                const output = document.getElementById('configOutput');
+                const config = `const IMAGES_CONFIG = ${JSON.stringify(state, null, 2)};`;
+
+                output.textContent = config;
+                output.classList.add('show');
+
+                // Copy to clipboard
+                navigator.clipboard.writeText(config).then(() => {
+                    alert('✅ Config copied to clipboard!\n\nCreate a file named "images-config.js" and paste this code.');
+                }).catch(() => {
+                    alert('📋 Config displayed below. Please copy manually.');
+                });
+            }
+
+            function toggleLike(btn) {
+                btn.classList.toggle('liked');
+            }
+
+            // Public API
+            return {
+                init,
+                toggleCustomizer,
+                exportConfig,
+                toggleLike
+            };
+        })();
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => app.init());
     </script>
+
+    <!-- Optional: Load saved config -->
     <script src="images-config.js"></script>
 </body>
 </html>
