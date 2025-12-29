@@ -791,6 +791,11 @@
                     if (saved) {
                         this.state.data = { ...this.state.data, ...JSON.parse(saved) };
                     }
+                    
+                    // Legacy support for external config
+                    if (typeof IMAGES_CONFIG_PROFILE !== 'undefined') {
+                        this.state.data = { ...this.state.data, ...IMAGES_CONFIG_PROFILE };
+                    }
                 } catch (e) {
                     console.error('Error loading data:', e);
                 }
@@ -1069,5 +1074,6 @@
         // Initialize on load
         document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
+    <script src="images-config-profile.js"></script>
 </body>
 </html>
